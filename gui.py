@@ -86,7 +86,9 @@ class ImageEditorGuiClass(object):
         self.openImageButton = QtWidgets.QPushButton(self.centralwidget)
         self.openImageButton.setObjectName(_fromUtf8("openImageButton"))
         self.horizontalLayout.addWidget(self.openImageButton)
-        
+        self.openImageButton.setStyleSheet("background-color:#1D267D; color: white;")
+        self.openImageButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+
         # Xác định nút Save ảnh
         self.saveImageButton = QtWidgets.QPushButton(self.centralwidget)
         self.saveImageButton.setObjectName(_fromUtf8("saveImageButton"))
@@ -99,6 +101,7 @@ class ImageEditorGuiClass(object):
         self.line_6.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_6.setObjectName(_fromUtf8("line_6"))
         self.verticalLayout_3.addWidget(self.line_6)
+        self.saveImageButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         
         # Xác định Histogram Equalization button
         self.histogramEqualizationButton = QtWidgets.QPushButton(self.centralwidget)
@@ -302,7 +305,7 @@ class ImageEditorGuiClass(object):
         # Đặt tên cho các thành phần của GUI
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate
-                                  ("MainWindow", "Photoshop Fa-ke - Nhóm 4", None))
+                                  ("MainWindow", "GUI Xử lý ảnh - Nhóm 4", None))
         self.openImageButton.setText(_translate
                                      ("MainWindow", "Open", None))
         self.saveImageButton.setText(_translate
@@ -337,15 +340,12 @@ class ImageEditorGuiClass(object):
                                          ("MainWindow", "View Histogram", None))
         
 class InputDialogGuiClass(QDialog):
-
-    # define class variable to store  integer value of gamma entered by user
     gamma = 1.0
 
     def __init__(self, parent):
         super(InputDialogGuiClass, self).__init__(parent)
         self.setupUi(self)
 
-        # link functions with OK and Cancel button clicks
         self.cancelButton.clicked.connect(lambda: self.close_window())
         self.okButton.clicked.connect(lambda: self.accept_value())
 
@@ -397,11 +397,9 @@ class InputDialogGuiClass(QDialog):
         self.retranslateUi(InputDialogGuiClass)
         QtCore.QMetaObject.connectSlotsByName(InputDialogGuiClass)
 
-    # close window on Close or Cancel button click
     def close_window(self):
         self.close()
 
-    # update class variable when OK button clicked and close the window
     def accept_value(self):
         if self.gammaInput.text() and float(self.gammaInput.text()) <= 10.0:
             self.gamma = float(self.gammaInput.text())

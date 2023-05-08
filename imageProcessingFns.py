@@ -1,6 +1,5 @@
 import numpy as np
 import cv2
-import scipy
 
 
 class ImageProcessorClass(object):
