@@ -13,10 +13,29 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QFileDialog
 
-
+import imageProcessingFns as ip
 
 # lớp ImageEditorClass thực hiện lớp cửa sổ chính GUI
 class ImageEditorClass(QMainWindow):
+    originalImage = [0]
+
+    currentImage = [0]
+
+    previousImage = [0]
+
+    imageBlur = [0]
+
+    imageSharpen = [0]
+
+    imageWidth = 0
+    imageHeight = 0
+
+    # initializes an object of ImageProcessorClass from imageProcessingFns.py
+    imageLib = ip.ImageProcessorClass()
+
+    # stores code of current operation
+    currentOperationCode = -1
+    
     def __init__(self, parent=None):
         super(ImageEditorClass, self).__init__()
         QWidget.__init__(self, parent)
@@ -30,12 +49,25 @@ class ImageEditorClass(QMainWindow):
         self.ui.saveImageButton.clicked.connect(lambda: self.save_image())
         self.ui.histogramEqualizationButton.clicked.connect\
             (lambda: self.histogram_equalization())
+        self.ui.logTransformButton.clicked.connect(lambda: self.log_transform())
+        self.ui.gammaCorrectionButton.clicked.connect(lambda: self.gamma_correction())
+        self.ui.negativeButton.clicked.connect(lambda: self.image_negative())
+
+        self.ui.blurExtendInputSlider.valueChanged.connect(lambda: self.blur())
+        self.ui.sharpenExtendInputSlider.valueChanged.connect(lambda: self.sharpen())
+
+        self.ui.undoButton.clicked.connect(lambda: self.undo())
+        self.ui.undoAllButton.clicked.connect(lambda: self.undoAll())
+        
         self.ui.viewHistogramButton.clicked.connect(lambda: self.view_histogram())
+        self.ui.detectEdgeButton.clicked.connect(lambda: self.edge_detection())
+        
+        self.newDialog = InputDialogGuiClass(self)
         
     # Hàm xử lý nút Open
     def open_image(self):
         #  Tạo hàm set_default_slider để xét các nút về vị trí ban đầu
-        # self.set_default_slider()
+        self.set_default_slider()
 
         # Mở hộp thoại Mở hình ảnh mới và chụp đường dẫn của tệp đã chọn
         open_image_window = QFileDialog()
@@ -98,13 +130,187 @@ class ImageEditorClass(QMainWindow):
                                    Qt.SmoothTransformation)
             self.ui.imageDisplayLabel.setPixmap(pixmap)
             
+    #
+    def histogram_equalization(self):
+        self.updatePreviousImage()
+        self.currentOperationCode = 0
+        self.set_default_slider()
+
+        self.currentImage[:, :, 2] = self.imageLib.histogram_equalization\
+            (self.currentImage[:, :, 2])
+        self.displayImage()
+
+    def gamma_correction(self):
+        self.updatePreviousImage()
+
+        self.currentOperationCode = 1
+
+        self.set_default_slider()
+
+        if self.newDialog.exec() == 0:
+            gamma_value = self.newDialog.gamma
+            self.newDialog.gammaInput.setText('1.00')
+            self.newDialog.gamma = 1.0
+            if gamma_value > 0:
+                self.currentImage[:, :, 2] = self.imageLib.gamma_correction\
+                    (self.currentImage[:, :, 2], gamma_value)
+
+        self.displayImage()
+
+    def log_transform(self):
+        self.updatePreviousImage()
+        self.currentOperationCode = 2
+
+        self.set_default_slider()
+
+        self.currentImage[:, :, 2] = \
+            self.imageLib.log_transform(self.currentImage[:, :, 2])
+
+        self.displayImage()
+
+    def image_negative(self):
+        self.updatePreviousImage()
+        self.currentOperationCode = 3
+        
+        self.set_default_slider()
+
+        self.currentImage = self.imageLib.image_negative(self.currentImage)
+
+        self.displayImage()
+
+    def blur(self):
+        self.updatePreviousImage()
+
+        self.ui.sharpenExtendInputSlider.valueChanged.disconnect()
+        self.ui.sharpenExtendInputSlider.setValue(0)
+        self.ui.sharpenExtendInputSlider.valueChanged.connect(lambda:
+                                                              self.sharpen())
+        self.ui.sharpenValueLabel.setText('0')
+
+        blur_value = int(np.floor(self.ui.blurExtendInputSlider.value()))
+        blur_window_size = (blur_value * 2) + 1
+
+        if self.currentOperationCode == 4:
+            self.currentImage = self.imageBlur.copy()
+        else:
+            self.imageBlur = self.currentImage.copy()
+
+        if blur_value > 0:
+            # enable undo button
+            self.ui.undoButton.setEnabled(True)
+            self.currentImage[:, :, 2] = \
+                self.imageLib.blur(self.currentImage[:, :, 2], blur_window_size)
+
+        self.currentOperationCode = 4
+
+        self.ui.blurValueLabel.setText(str(blur_value))
+        self.displayImage()
+
+    def sharpen(self):
+        self.updatePreviousImage()
+
+        self.ui.blurExtendInputSlider.valueChanged.disconnect()
+        self.ui.blurExtendInputSlider.setValue(0)
+        self.ui.blurExtendInputSlider.valueChanged.\
+            connect(lambda: self.blur())
+        self.ui.blurValueLabel.setText('0')
+
+        sharpen_value = self.ui.sharpenExtendInputSlider.value()
+        sharpen_const = sharpen_value / 10.0
+
+        if self.currentOperationCode == 5:
+            self.currentImage = self.imageSharpen.copy()
+        else:
+            self.imageSharpen = self.currentImage.copy()
+
+        if sharpen_const > 0:
+            # enable undo button
+            self.ui.undoButton.setEnabled(True)
+            self.currentImage[:, :, 2] = \
+                np.uint8(self.imageLib.sharp(self.currentImage[:, :, 2], sharpen_const))
+
+
+        self.currentOperationCode = 5
+
+        self.ui.sharpenValueLabel.setText(str(sharpen_value))
+
+        self.displayImage()
+
+    def undo(self):
+        self.ui.undoButton.setEnabled(False)
+        self.currentImage = self.previousImage.copy()
+
+        self.displayImage()
+
+    def undoAll(self):
+        self.set_default_slider()
+        self.currentImage = self.originalImage.copy()
+
+        self.displayImage()
+        self.ui.undoButton.setEnabled(False)
+
+    def view_histogram(self):
+        histogram = np.bincount(self.currentImage[:, :, 2].ravel(), minlength=256)
+        plt.figure(num='Image Histogram')
+        plt.stem(histogram)
+        plt.xlabel('Intensity levels')
+        plt.ylabel('No. of pixels')
+        plt.show()
+
+    def edge_detection(self):
+        self.updatePreviousImage()
+
+        self.currentOperationCode = 6
+        self.set_default_slider()
+        self.currentImage[:, :, 2] \
+            = self.imageLib.edge_detection(self.currentImage[:, :, 2])
+
+        self.displayImage()
+            
     # Hàm enable_options bật tất cả các nút và thanh trượt trong cửa sổ.
     # Chỉ một nuts Open được mở khi bắt đầu
     def enable_options(self):
         self.ui.saveImageButton.setEnabled(True)
         
+        self.ui.histogramEqualizationButton.setEnabled(True)
+        self.ui.gammaCorrectionButton.setEnabled(True)
+        self.ui.logTransformButton.setEnabled(True)
+        self.ui.negativeButton.setEnabled(True)
+
+        self.ui.blurExtendInputSlider.setEnabled(True)
+        self.ui.sharpenExtendInputSlider.setEnabled(True)
+
+        self.ui.undoAllButton.setEnabled(True)
+        self.ui.undoButton.setEnabled(False)
+
+        self.ui.viewHistogramButton.setEnabled(True)
+        self.ui.detectEdgeButton.setEnabled(True)
+        
     # Tạo hàm set_default_slider để xét các nút về ban đầu
     # .......
+    def set_default_slider(self):
+        self.ui.sharpenExtendInputSlider.valueChanged.disconnect()
+        self.ui.blurExtendInputSlider.valueChanged.disconnect()
+
+        self.ui.blurExtendInputSlider.setValue(0)
+        self.ui.blurValueLabel.setText('0')
+        self.ui.sharpenExtendInputSlider.setValue(0)
+        self.ui.sharpenValueLabel.setText('0')
+
+        self.ui.blurExtendInputSlider.valueChanged.connect(lambda: self.blur())
+        self.ui.sharpenExtendInputSlider.valueChanged.connect(
+            lambda: self.sharpen())
+
+        self.imageBlur = [0]
+        self.imageSharpen = [0]
+
+        if (self.currentOperationCode >= 0) and \
+                not self.ui.undoButton.isEnabled():
+            self.ui.undoButton.setEnabled(True)
+
+
+    def updatePreviousImage(self):
+        self.previousImage = self.currentImage.copy()
     
     
     # Hàm khởi tạo ImageEditorClass và chạy ứng dụng
