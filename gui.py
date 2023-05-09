@@ -270,7 +270,25 @@ class ImageEditorGuiClass(object):
         
         
         
-        
+         # Xác định pannel thành viên
+        self.textboxTV1 = QtWidgets.QLabel(self.centralwidget)
+        self.textboxTV1.setObjectName(_fromUtf8("textboxTV1"))
+        self.verticalLayout_3.addWidget(self.textboxTV1)
+        self.textboxTV1.setEnabled(False)
+
+        self.textboxTV2 = QtWidgets.QLabel(self.centralwidget)
+        self.textboxTV2.setObjectName(_fromUtf8("textboxTV2"))
+        self.verticalLayout_3.addWidget(self.textboxTV2)
+        self.textboxTV2.setEnabled(False)
+
+        self.textboxTV3 = QtWidgets.QLabel(self.centralwidget)
+        self.textboxTV3.setObjectName(_fromUtf8("textboxTV3"))
+        self.verticalLayout_3.addWidget(self.textboxTV3)
+        self.textboxTV3.setEnabled(False)
+
+
+       
+
         
         # ProgressLabel is not used
         self.progressLabel = QtWidgets.QLabel(self.centralwidget)
@@ -299,6 +317,7 @@ class ImageEditorGuiClass(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        
         
         
       
@@ -338,6 +357,15 @@ class ImageEditorGuiClass(object):
                                       ("MainWindow", "Edge Detection", None))
         self.viewHistogramButton.setText(_translate
                                          ("MainWindow", "View Histogram", None))
+        self.textboxTV1.setText(_translate
+                                         ("MainWindow", "Trần Đức Long - 20110058", None))
+        self.textboxTV2.setText(_translate
+                                         ("MainWindow", "Nguyễn Như Sâm - 20110557", None))
+        self.textboxTV3.setText(_translate
+                                         ("MainWindow", "Đào Xuân Trí - 20110581", None))
+    
+    
+    
         
 class InputDialogGuiClass(QDialog):
     gamma = 1.0
