@@ -133,12 +133,52 @@ class ImageEditorGuiClass(object):
         self.gammaCorrectionButton.setObjectName(_fromUtf8("gammaCorrectionButton"))
         self.gammaCorrectionButton.setEnabled(False)
         self.verticalLayout_3.addWidget(self.gammaCorrectionButton)
+
+        self.line_4 = QtWidgets.QFrame(self.centralwidget)
+        self.line_4.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line_4.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_4.setObjectName(_fromUtf8("line_4"))
+        self.verticalLayout_3.addWidget(self.line_4)
         
         # Xác định Log Transform button
         self.logTransformButton = QtWidgets.QPushButton(self.centralwidget)
         self.logTransformButton.setObjectName(_fromUtf8("logTransformButton"))
         self.logTransformButton.setEnabled(False)
         self.verticalLayout_3.addWidget(self.logTransformButton)
+
+        # Tạo layout chứa label và slider
+        self.logTransformLayout = QtWidgets.QHBoxLayout()
+        self.logTransformLayout.setObjectName("logTransformLayout")
+
+        # Tạo label "Log Transform" và đặt vào layout
+        self.logTransformLabel = QtWidgets.QLabel(self.centralwidget)
+        self.logTransformLabel.setObjectName(_fromUtf8("logTransformLabel"))
+        self.logTransformLayout.addWidget(self.logTransformLabel)
+
+        # Tạo thanh trượt Log Transform
+        self.logTransformSlider = QtWidgets.QSlider(QtCore.Qt.Horizontal, self.centralwidget)
+        self.logTransformSlider.setObjectName("logTransformSlider")
+        self.logTransformSlider.setRange(0,10)
+        self.logTransformSlider.setEnabled(False)
+        self.logTransformLayout.addWidget(self.logTransformSlider)
+
+        # Tạo label để hiển thị giá trị của slider
+        self.logTransformValueLabel = QtWidgets.QLabel(self.centralwidget)
+        self.logTransformValueLabel.setObjectName(_fromUtf8("logTransformValueLabel"))
+        self.logTransformValueLabel.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignVCenter)
+        self.logTransformLayout.addWidget(self.logTransformValueLabel)
+
+        # Thêm layout vào vertical layout chính
+        self.verticalLayout_3.addLayout(self.logTransformLayout)
+
+        self.line_4 = QtWidgets.QFrame(self.centralwidget)
+        self.line_4.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line_4.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_4.setObjectName(_fromUtf8("line_4"))
+        self.verticalLayout_3.addWidget(self.line_4)
+
+
+
         
         # Xác định Image Negative button
         self.negativeButton = QtWidgets.QPushButton(self.centralwidget)
@@ -272,23 +312,6 @@ class ImageEditorGuiClass(object):
         self.viewHistogramButton.setEnabled(False)
         
         
-        
-        #  # Xác định pannel thành viên
-        # self.textboxTV1 = QtWidgets.QLabel(self.centralwidget)
-        # self.textboxTV1.setObjectName(_fromUtf8("textboxTV1"))
-        # self.verticalLayout_3.addWidget(self.textboxTV1)
-        # self.textboxTV1.setEnabled(False)
-
-        # self.textboxTV2 = QtWidgets.QLabel(self.centralwidget)
-        # self.textboxTV2.setObjectName(_fromUtf8("textboxTV2"))
-        # self.verticalLayout_3.addWidget(self.textboxTV2)
-        # self.textboxTV2.setEnabled(False)
-
-        # self.textboxTV3 = QtWidgets.QLabel(self.centralwidget)
-        # self.textboxTV3.setObjectName(_fromUtf8("textboxTV3"))
-        # self.verticalLayout_3.addWidget(self.textboxTV3)
-        # self.textboxTV3.setEnabled(False)
-
 
         # Tạo panel thành viên
         self.groupboxPanel = QtWidgets.QGroupBox(self.centralwidget)
@@ -417,6 +440,11 @@ class ImageEditorGuiClass(object):
                                            ("MainWindow", "Gamma Correction", None))
         self.logTransformButton.setText(_translate
                                         ("MainWindow", "Log Transform", None))
+
+        self.logTransformLabel.setText(_translate
+                                         ("MainWindow", "Change Value", None))
+        self.logTransformValueLabel.setText(_translate("MainWindow", "0", None))
+
         self.negativeButton.setText(_translate
                                     ("MainWindow", "Image Negative", None))
 
@@ -437,12 +465,6 @@ class ImageEditorGuiClass(object):
                                       ("MainWindow", "Edge Detection", None))
         self.viewHistogramButton.setText(_translate
                                          ("MainWindow", "View Histogram", None))
-        # self.textboxTV1.setText(_translate
-        #                                  ("MainWindow", "Trần Đức Long - 20110058", None))
-        # self.textboxTV2.setText(_translate
-        #                                  ("MainWindow", "Nguyễn Như Sâm - 20110557", None))
-        # self.textboxTV3.setText(_translate
-        #                                  ("MainWindow", "Đào Xuân Trí - 20110581", None))
     
     
     

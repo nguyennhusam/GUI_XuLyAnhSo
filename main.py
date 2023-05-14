@@ -23,6 +23,8 @@ class ImageEditorClass(QMainWindow):
 
     previousImage = [0]
 
+    imageLogTransform = [0]
+
     imageBlur = [0]
 
     imageSharpen = [0]
@@ -50,6 +52,7 @@ class ImageEditorClass(QMainWindow):
         self.ui.histogramEqualizationButton.clicked.connect\
             (lambda: self.histogram_equalization())
         self.ui.logTransformButton.clicked.connect(lambda: self.log_transform())
+        self.ui.logTransformSlider.valueChanged.connect(lambda: self.log_transform())
         self.ui.gammaCorrectionButton.clicked.connect(lambda: self.gamma_correction())
         self.ui.negativeButton.clicked.connect(lambda: self.image_negative())
 
@@ -138,6 +141,9 @@ class ImageEditorClass(QMainWindow):
 
         self.currentImage[:, :, 2] = self.imageLib.histogram_equalization\
             (self.currentImage[:, :, 2])
+        # for i in range(3):
+        #     self.currentImage[:, :, i] = self.imageLib.histogram_equalization(self.currentImage[:, :, i])
+            
         self.displayImage()
 
     def gamma_correction(self):
@@ -159,13 +165,19 @@ class ImageEditorClass(QMainWindow):
 
     def log_transform(self):
         self.updatePreviousImage()
+        
+        self.ui.logTransformSlider.valueChanged.connect(lambda: self.log_transform())
+        logTranform_value = int(np.floor(self.ui.logTransformSlider.value()))
+
+
         self.currentOperationCode = 2
 
-        self.set_default_slider()
 
-        self.currentImage[:, :, 2] = \
-            self.imageLib.log_transform(self.currentImage[:, :, 2])
-
+        # self.currentImage[:, :, 2] = \
+        #     self.imageLib.log_transform(self.currentImage[:, :, 2])
+        for i in range(3):
+            self.currentImage[:, :, i] = self.imageLib.log_transform(self.currentImage[:, :, i])
+        self.ui.logTransformValueLabel.setText(str(logTranform_value))
         self.displayImage()
 
     def image_negative(self):
@@ -198,8 +210,10 @@ class ImageEditorClass(QMainWindow):
         if blur_value > 0:
             # enable undo button
             self.ui.undoButton.setEnabled(True)
-            self.currentImage[:, :, 2] = \
-                self.imageLib.blur(self.currentImage[:, :, 2], blur_window_size)
+            # self.currentImage[:, :, 2] = \
+            #     self.imageLib.blur(self.currentImage[:, :, 2], blur_window_size)
+            for i in range(3):
+                self.currentImage[:, :, i] = self.imageLib.blur(self.currentImage[:, :, i],blur_window_size)
 
         self.currentOperationCode = 4
 
@@ -226,9 +240,10 @@ class ImageEditorClass(QMainWindow):
         if sharpen_const > 0:
             # enable undo button
             self.ui.undoButton.setEnabled(True)
-            self.currentImage[:, :, 2] = \
-                np.uint8(self.imageLib.sharp(self.currentImage[:, :, 2], sharpen_const))
-
+            # self.currentImage[:, :, 2] = \
+            #     np.uint8(self.imageLib.sharp(self.currentImage[:, :, 2], sharpen_const))
+            for i in range(3):
+                self.currentImage[:, :, i] = self.imageLib.sharp(self.currentImage[:, :, i],sharpen_const)
 
         self.currentOperationCode = 5
 
@@ -304,8 +319,11 @@ class ImageEditorClass(QMainWindow):
 
         self.currentOperationCode = 6
         self.set_default_slider()
-        self.currentImage[:, :, 2] \
-            = self.imageLib.edge_detection(self.currentImage[:, :, 2])
+        # self.currentImage[:, :, 2] \
+        #     = self.imageLib.edge_detection(self.currentImage[:, :, 2])
+        
+        for i in range(3):
+            self.currentImage[:, :, i] = self.imageLib.edge_detection(self.currentImage[:, :, i])
 
         self.displayImage()
             
@@ -317,6 +335,7 @@ class ImageEditorClass(QMainWindow):
         self.ui.histogramEqualizationButton.setEnabled(True)
         self.ui.gammaCorrectionButton.setEnabled(True)
         self.ui.logTransformButton.setEnabled(True)
+        self.ui.logTransformSlider.setEnabled(True)
         self.ui.negativeButton.setEnabled(True)
 
         self.ui.blurExtendInputSlider.setEnabled(True)
@@ -331,18 +350,22 @@ class ImageEditorClass(QMainWindow):
     # Tạo hàm set_default_slider để xét các nút về ban đầu
     # .......
     def set_default_slider(self):
+        self.ui.logTransformSlider.valueChanged.disconnect()
         self.ui.sharpenExtendInputSlider.valueChanged.disconnect()
         self.ui.blurExtendInputSlider.valueChanged.disconnect()
 
+        self.ui.logTransformSlider.setValue(0)
+        self.ui.logTransformValueLabel.setText('0')
         self.ui.blurExtendInputSlider.setValue(0)
         self.ui.blurValueLabel.setText('0')
         self.ui.sharpenExtendInputSlider.setValue(0)
         self.ui.sharpenValueLabel.setText('0')
 
+        self.ui.logTransformSlider.valueChanged.connect(lambda: self.log_transform())
         self.ui.blurExtendInputSlider.valueChanged.connect(lambda: self.blur())
-        self.ui.sharpenExtendInputSlider.valueChanged.connect(
-            lambda: self.sharpen())
+        self.ui.sharpenExtendInputSlider.valueChanged.connect(lambda: self.sharpen())
 
+        self.imageLogTransform = [0]
         self.imageBlur = [0]
         self.imageSharpen = [0]
 
