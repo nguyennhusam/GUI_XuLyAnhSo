@@ -68,7 +68,7 @@ class ImageEditorGuiClass(object):
         self.imageDisplayLabel.setAutoFillBackground(False)
         self.imageDisplayLabel.setStyleSheet(_fromUtf8("background-color: "
                                                        "#000000"))
-        backgroundPixmap = QPixmap('background.png')
+        backgroundPixmap = QPixmap('Image/background.png')
         self.imageDisplayLabel.setPixmap(backgroundPixmap)
         self.imageDisplayLabel.setText(_fromUtf8(""))
         self.imageDisplayLabel.setObjectName(_fromUtf8("imageDisplayLabel"))
@@ -154,6 +154,7 @@ class ImageEditorGuiClass(object):
 
         self.horizontalLayout_9 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_9.setObjectName(_fromUtf8("horizontalLayout_9"))
+  
         
         # Xác định Blur Slider Name label
         self.blurLabel = QtWidgets.QLabel(self.centralwidget)
@@ -193,6 +194,7 @@ class ImageEditorGuiClass(object):
 
         self.horizontalLayout_10 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_10.setObjectName(_fromUtf8("horizontalLayout_10"))
+
         
         # Xác định Sharpen Slider Name label
         self.sharpenLabel = QtWidgets.QLabel(self.centralwidget)
@@ -215,6 +217,7 @@ class ImageEditorGuiClass(object):
         self.horizontalLayout_10.addWidget(self.sharpenValueLabel)
 
         self.verticalLayout_3.addLayout(self.horizontalLayout_10)
+
 
         # Xác định Sharpen Slider
         self.sharpenExtendInputSlider = QtWidgets.QSlider(self.centralwidget)
@@ -270,21 +273,96 @@ class ImageEditorGuiClass(object):
         
         
         
-         # Xác định pannel thành viên
-        self.textboxTV1 = QtWidgets.QLabel(self.centralwidget)
-        self.textboxTV1.setObjectName(_fromUtf8("textboxTV1"))
-        self.verticalLayout_3.addWidget(self.textboxTV1)
-        self.textboxTV1.setEnabled(False)
+        #  # Xác định pannel thành viên
+        # self.textboxTV1 = QtWidgets.QLabel(self.centralwidget)
+        # self.textboxTV1.setObjectName(_fromUtf8("textboxTV1"))
+        # self.verticalLayout_3.addWidget(self.textboxTV1)
+        # self.textboxTV1.setEnabled(False)
 
-        self.textboxTV2 = QtWidgets.QLabel(self.centralwidget)
-        self.textboxTV2.setObjectName(_fromUtf8("textboxTV2"))
-        self.verticalLayout_3.addWidget(self.textboxTV2)
-        self.textboxTV2.setEnabled(False)
+        # self.textboxTV2 = QtWidgets.QLabel(self.centralwidget)
+        # self.textboxTV2.setObjectName(_fromUtf8("textboxTV2"))
+        # self.verticalLayout_3.addWidget(self.textboxTV2)
+        # self.textboxTV2.setEnabled(False)
 
-        self.textboxTV3 = QtWidgets.QLabel(self.centralwidget)
-        self.textboxTV3.setObjectName(_fromUtf8("textboxTV3"))
-        self.verticalLayout_3.addWidget(self.textboxTV3)
-        self.textboxTV3.setEnabled(False)
+        # self.textboxTV3 = QtWidgets.QLabel(self.centralwidget)
+        # self.textboxTV3.setObjectName(_fromUtf8("textboxTV3"))
+        # self.verticalLayout_3.addWidget(self.textboxTV3)
+        # self.textboxTV3.setEnabled(False)
+
+
+        # Tạo panel thành viên
+        self.groupboxPanel = QtWidgets.QGroupBox(self.centralwidget)
+        self.groupboxPanel.setTitle("Panel Nhóm")
+        self.groupboxPanel.setStyleSheet("QGroupBox { font-weight: bold; }")
+        self.verticalLayout_3.addWidget(self.groupboxPanel)
+
+        self.memberPanel = QtWidgets.QVBoxLayout(self.groupboxPanel)
+
+        # Thêm thành viên thứ nhất
+        member1 = QtWidgets.QHBoxLayout()
+        self.memberPanel.addLayout(member1)
+
+        avatar1 = QtWidgets.QLabel()
+        avatar1.setPixmap(QtGui.QPixmap("Image/avtLong.jpg").scaledToHeight(50))
+        avatar1.setAlignment(QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft)
+        member1.addWidget(avatar1)
+
+        info1 = QtWidgets.QVBoxLayout()
+        info1.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
+        member1.addLayout(info1)
+
+        name1 = QtWidgets.QLabel("Trần Đức Long (20110058)")
+        name1.setStyleSheet("font-weight: bold;")
+        name1.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignTop)
+        info1.addWidget(name1)
+
+        description1 = QtWidgets.QLabel("Thành viên")
+        description1.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignTop)
+        info1.addWidget(description1)
+
+        # Thêm thành viên thứ hai
+        member2 = QtWidgets.QHBoxLayout()
+        self.memberPanel.addLayout(member2)
+
+        avatar2 = QtWidgets.QLabel()
+        avatar2.setPixmap(QtGui.QPixmap("Image/avtSam.jpg").scaledToHeight(50))
+        avatar2.setAlignment(QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft)
+        member2.addWidget(avatar2)
+
+        info2 = QtWidgets.QVBoxLayout()
+        info2.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
+        member2.addLayout(info2)
+
+        name2 = QtWidgets.QLabel("Nguyễn Như Sâm (20110557)")
+        name2.setStyleSheet("font-weight: bold;")
+        name2.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignTop)
+        info2.addWidget(name2)
+
+        description2 = QtWidgets.QLabel("Thành viên")
+        description2.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignTop)
+        info2.addWidget(description2)
+
+        # Thêm thành viên thứ ba
+        member3 = QtWidgets.QHBoxLayout()
+        self.memberPanel.addLayout(member3)
+
+        avatar3 = QtWidgets.QLabel()
+        avatar3.setPixmap(QtGui.QPixmap("Image/avtTri.jpg").scaledToHeight(50))
+        avatar3.setAlignment(QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft)
+        member3.addWidget(avatar3)
+
+        info3 = QtWidgets.QVBoxLayout()
+        info3.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
+        member3.addLayout(info3)
+
+        name3 = QtWidgets.QLabel("Đào Xuân Trí (20110581)")
+        name3.setStyleSheet("font-weight: bold;")
+        name3.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignTop)
+        info3.addWidget(name3)
+
+        description3 = QtWidgets.QLabel("Trưởng nhóm")
+        description3.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignTop)
+        info3.addWidget(description3)
 
 
        
@@ -329,7 +407,7 @@ class ImageEditorGuiClass(object):
                                      ("MainWindow", "Open", None))
         self.saveImageButton.setText(_translate
                                      ("MainWindow", "Save", None))
-        icon = QIcon("logo2.png")
+        icon = QIcon("Image/logo2.png")
         pixmap = icon.pixmap(64, 64)
         MainWindow.setWindowIcon(QIcon(pixmap))
         
@@ -341,6 +419,8 @@ class ImageEditorGuiClass(object):
                                         ("MainWindow", "Log Transform", None))
         self.negativeButton.setText(_translate
                                     ("MainWindow", "Image Negative", None))
+
+
         self.blurLabel.\
             setText(_translate("MainWindow",
                                "<html><head/><body><p>Blur Image</p></body></html>", None))
@@ -357,12 +437,12 @@ class ImageEditorGuiClass(object):
                                       ("MainWindow", "Edge Detection", None))
         self.viewHistogramButton.setText(_translate
                                          ("MainWindow", "View Histogram", None))
-        self.textboxTV1.setText(_translate
-                                         ("MainWindow", "Trần Đức Long - 20110058", None))
-        self.textboxTV2.setText(_translate
-                                         ("MainWindow", "Nguyễn Như Sâm - 20110557", None))
-        self.textboxTV3.setText(_translate
-                                         ("MainWindow", "Đào Xuân Trí - 20110581", None))
+        # self.textboxTV1.setText(_translate
+        #                                  ("MainWindow", "Trần Đức Long - 20110058", None))
+        # self.textboxTV2.setText(_translate
+        #                                  ("MainWindow", "Nguyễn Như Sâm - 20110557", None))
+        # self.textboxTV3.setText(_translate
+        #                                  ("MainWindow", "Đào Xuân Trí - 20110581", None))
     
     
     

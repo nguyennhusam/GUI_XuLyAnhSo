@@ -250,12 +250,54 @@ class ImageEditorClass(QMainWindow):
         self.ui.undoButton.setEnabled(False)
 
     def view_histogram(self):
-        histogram = np.bincount(self.currentImage[:, :, 2].ravel(), minlength=256)
-        plt.figure(num='Image Histogram')
-        plt.stem(histogram)
-        plt.xlabel('Intensity levels')
-        plt.ylabel('No. of pixels')
+        # histogramRed = np.bincount(self.currentImage[:, :, 0].ravel(), minlength=256)
+        # histogramBlue = np.bincount(self.currentImage[:, :, 1].ravel(), minlength=256)
+        # histogramGreen = np.bincount(self.currentImage[:, :, 2].ravel(), minlength=256)
+        
+        # plt.figure(num='Image Histogram')
+        
+        # plt.fill_between(np.arange(256), histogramRed, color='r', alpha=0.5)
+        # plt.fill_between(np.arange(256), histogramGreen, color='g', alpha=0.5)
+        # plt.fill_between(np.arange(256), histogramBlue, color='b', alpha=0.5)
+        
+        # plt.xlabel('Intensity levels')
+        # plt.ylabel('No. of pixels')
+        # plt.show()
+        hist_r = np.zeros(256)
+        hist_g = np.zeros(256)
+        hist_b = np.zeros(256)
+        for i in range(self.currentImage.shape[0]):
+            for j in range(self.currentImage.shape[1]):
+                r = self.currentImage[i,j,0]
+                g = self.currentImage[i,j,1]
+                b = self.currentImage[i,j,2]
+                hist_r[r] += 1
+                hist_g[g] += 1
+                hist_b[b] += 1
+        hist_all = hist_r + hist_g + hist_b
+
+        # Hiển thị biểu đồ histogram
+        fig, ax = plt.subplots(2, 2, figsize=(10, 8))
+        ax[0, 0].bar(np.arange(256), hist_r, color='r', alpha=0.5)
+        ax[0, 1].bar(np.arange(256), hist_g, color='g', alpha=0.5)
+        ax[1, 0].bar(np.arange(256), hist_b, color='b', alpha=0.5)
+        ax[1, 1].bar(np.arange(256), hist_all, color='k', alpha=0.5)
+        ax[0, 0].set_ylabel('Số lượng pixel')
+        ax[0, 1].set_ylabel('Số lượng pixel')
+        ax[1, 0].set_ylabel('Số lượng pixel')
+        ax[1, 1].set_ylabel('Số lượng pixel')
+        ax[1, 1].set_xlabel('Giá trị màu (0-255)')
+        ax[0, 0].set_title('Biểu đồ histogram R')
+        ax[0, 1].set_title('Biểu đồ histogram G')
+        ax[1, 0].set_title('Biểu đồ histogram B')
+        ax[1, 1].set_title('Biểu đồ histogram tổng hợp')
+        plt.tight_layout()
         plt.show()
+        
+
+
+
+
 
     def edge_detection(self):
         self.updatePreviousImage()
